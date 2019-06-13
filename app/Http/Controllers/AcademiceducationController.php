@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\User;
 use Illuminate\Http\Request;
 use App\Model\Academiceducation;
 use App\Http\Resources\Academiceducation\AcademiceducationResource;
@@ -13,9 +14,9 @@ class AcademiceducationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        return Academiceducation::all();
+        return AcademiceducationResource::collection($user->academiceducations);
     }
 
     /**
