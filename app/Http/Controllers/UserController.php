@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\User;
 use Illuminate\Http\Request;
-use App\Model\Academiceducation;
-use App\Http\Resources\Academiceducation\AcademiceducationResource;
+use App\Http\Resources\User\UserResource;
 
-class AcademiceducationController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class AcademiceducationController extends Controller
      */
     public function index()
     {
-        return Academiceducation::all();
+        return User::all();
     }
 
     /**
@@ -42,21 +42,21 @@ class AcademiceducationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Model\Academiceducation  $academiceducation
+     * @param  \App\Model\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(Academiceducation $academiceducation)
+    public function show(User $user)
     {
-        return new AcademiceducationResource($academiceducation);
+        return new UserResource($user);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Model\Academiceducation  $academiceducation
+     * @param  \App\Model\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(Academiceducation $academiceducation)
+    public function edit(User $user)
     {
         //
     }
@@ -65,10 +65,10 @@ class AcademiceducationController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Model\Academiceducation  $academiceducation
+     * @param  \App\Model\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Academiceducation $academiceducation)
+    public function update(Request $request, User $user)
     {
         //
     }
@@ -76,10 +76,10 @@ class AcademiceducationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Model\Academiceducation  $academiceducation
+     * @param  \App\Model\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Academiceducation $academiceducation)
+    public function destroy(User $user)
     {
         //
     }

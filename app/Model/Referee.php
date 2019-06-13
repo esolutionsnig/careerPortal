@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use Illuminate\Foundation\Auth\User;
+use App\Model\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Referee extends Model

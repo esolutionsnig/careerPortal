@@ -17,46 +17,50 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('/applicantdatamanagers','ApplicantdatamanagerController');
+Route::apiResource('/users','UserController');
+Route::group(['prefix' => 'users'], function () {
+    Route::apiResource('/{user}/applicantdatamanagers','ApplicantdatamanagerController');
 
-Route::apiResource('/academiceducations','AcademiceducationController');
+    Route::apiResource('/{user}/academiceducations','AcademiceducationController');
 
-Route::apiResource('/bankingdetails','BankingdetailController');
+    Route::apiResource('/{user}/bankingdetails','BankingdetailController');
 
-Route::apiResource('/declarations','DeclarationController');
+    Route::apiResource('/{user}/declarations','DeclarationController');
 
-Route::apiResource('/dependants','DependantController');
+    Route::apiResource('/{user}/dependants','DependantController');
 
-Route::apiResource('/employmentselfassessments','EmploymentselfassessmentController');
+    Route::apiResource('/{user}/employmentselfassessments','EmploymentselfassessmentController');
 
-Route::apiResource('/employmenthistories','EmploymenthistoryController');
+    Route::apiResource('/{user}/employmenthistories','EmploymenthistoryController');
 
-Route::apiResource('/fullselfdisclosures','FullselfdisclosureController');
+    Route::apiResource('/{user}/fullselfdisclosures','FullselfdisclosureController');
 
-Route::apiResource('/generals','GeneralController');
+    Route::apiResource('/{user}/generals','GeneralController');
 
-Route::apiResource('/guardians','GuardianController');
+    Route::apiResource('/{user}/guardians','GuardianController');
 
-Route::apiResource('/hobbies','HobbyController');
+    Route::apiResource('/{user}/hobbies','HobbyController');
 
-Route::apiResource('/hometownaddresses','HometownaddressController');
+    Route::apiResource('/{user}/hometownaddresses','HometownaddressController');
 
-Route::apiResource('/nationalservices','NationalserviceController');
+    Route::apiResource('/{user}/nationalservices','NationalserviceController');
 
-Route::apiResource('/nextofkins','NextofkinController');
+    Route::apiResource('/{user}/nextofkins','NextofkinController');
 
-Route::apiResource('/parents','ParentsController');
+    Route::apiResource('/{user}/parents','ParentsController');
 
-Route::apiResource('/professionalmemberships','ProfessionalmembershipController');
+    Route::apiResource('/{user}/professionalmemberships','ProfessionalmembershipController');
 
-Route::apiResource('/professionalqualifications','ProfessionalqualificationController');
+    Route::apiResource('/{user}/professionalqualifications','ProfessionalqualificationController');
 
-Route::apiResource('/referees','RefereeController');
+    Route::apiResource('/{user}/referees','RefereeController');
 
-Route::apiResource('/residentialaddresses','ResidentialaddressController');
+    Route::apiResource('/{user}/residentialaddresses','ResidentialaddressController');
 
-Route::apiResource('/schoolleavingcertificates','SchoolleavingcertificateController');
+    Route::apiResource('/{user}/schoolleavingcertificates','SchoolleavingcertificateController');
 
-Route::apiResource('/socialmemberships','SocialmembershipController');
+    Route::apiResource('/{user}/socialmemberships','SocialmembershipController');
 
-Route::apiResource('/sports','SportController');
+    Route::apiResource('/{user}/sports','SportController');
+
+});
