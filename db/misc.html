@@ -1,0 +1,64 @@
+
+Adding Custom Fields to a Laravel 5 Registration Form
+
+September 25, 2015 
+
+Welcome to the incredibly popular Easy Laravel 5 companion blog. To celebrate the new edition's release (updated for Laravel 5.5!) use the discount code easteregg to receive 20% off the book or book/video package! » Buy the book
+
+The default registration form only includes fields for the user's name, e-mail address, and password. However, what if you wanted to additionally ask for a username or perhaps a location such as the user's country? Fortunately, Laravel's authentication implementation makes this an incredibly easy task.
+
+I'll walk you through an example in which we require the user to additionally provide a unique username. Begin by updating the users table to include a username field:
+
+$ php artisan make:migration add_username_field_to_users_table --table=users
+
+Open the newly created migration file and modify the up method to look like this:
+
+Schema::table('users', function(Blueprint $table)
+{
+$table->string('username');
+});
+
+Modify the down method to look like this:
+
+Schema::table('users', function(Blueprint $table)
+{
+$table->dropColumn('username');
+});
+
+Run the migration and then open the resources/auth/register.blade.php form we created earlier in the chapter. Add a field for accepting the username:
+
+<div class="form-group">
+{!! Form::label('username', 'Your Username') !!}
+{!! Form::text('username', null, 
+    ['class'=>'form-control', 'placeholder'=>'Username']) !!}
+</div>
+
+Of course, Laravel won't automatically know what to do with this field, therefore you'll need to make one last change. Open the AuthController.php controller found in app/Http/Controllers/Auth, and modify the validator method to look like this:
+
+protected function validator(array $data)
+{
+return Validator::make($data, [
+  'name' => 'required|string|max:255',
+  'username' => 'required|string|unique:users',
+  'email' => 'required|email|max:255|unique:users',
+  'password' => 'required|confirmed|min:6'
+]);
+}
+
+Next, scroll down and modify the create method to look like this:
+
+protected function create(array $data)
+{
+return User::create([
+'name' => $data['name'],
+'email' => $data['email'],
+'username' => $data['username'],
+'password' => bcrypt($data['password'])
+]);
+}
+
+Save these changes, and only one step remains. Open the app/User.php file and add the username field to the $fillable property like so:
+
+protected $fillable = ['name', 'email', 'password', 'username'];
+
+After saving the changes to the User model, believe it or not you're ready to register users with usernames! It really is that easy.
