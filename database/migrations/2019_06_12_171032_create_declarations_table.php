@@ -19,7 +19,7 @@ class CreateDeclarationsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('signature')->nullable();
             $table->string('date')->nullable();
-            $table->string('name_witness')->nullable();
+            $table->string('witness_name')->nullable();
             $table->string('witness_phone_number')->nullable();
             $table->string('witness_date')->nullable();
             $table->timestamps();

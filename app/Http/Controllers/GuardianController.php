@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\User;
 use App\Model\Guardian;
 use Illuminate\Http\Request;
+use App\Http\Resources\GuardianResource;
 
 class GuardianController extends Controller
 {
@@ -12,9 +14,9 @@ class GuardianController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return GuardianResource::collection($user->guardians);
     }
 
     /**

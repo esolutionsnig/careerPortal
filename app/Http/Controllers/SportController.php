@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\User;
 use App\Model\Sport;
 use Illuminate\Http\Request;
+use App\Http\Resources\SportResource;
 
 class SportController extends Controller
 {
@@ -12,9 +14,9 @@ class SportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return SportResource::collection($user->sports);
     }
 
     /**

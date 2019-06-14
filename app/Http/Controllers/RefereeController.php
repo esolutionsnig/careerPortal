@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\User;
 use App\Model\Referee;
 use Illuminate\Http\Request;
+use App\Http\Resources\RefereeResource;
 
 class RefereeController extends Controller
 {
@@ -12,9 +14,9 @@ class RefereeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return RefereeResource::collection($user->referees);
     }
 
     /**

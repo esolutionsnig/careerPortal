@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Residentialaddress;
+use App\Model\User;
 use Illuminate\Http\Request;
+use App\Model\Residentialaddress;
+use App\Http\Resources\ResidentialaddressResource;
 
 class ResidentialaddressController extends Controller
 {
@@ -12,9 +14,9 @@ class ResidentialaddressController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return ResidentialaddressResource::collection($user->residentialaddresses);
     }
 
     /**

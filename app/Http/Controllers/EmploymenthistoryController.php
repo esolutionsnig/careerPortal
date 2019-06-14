@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Employmenthistory;
+use App\Model\User;
 use Illuminate\Http\Request;
+use App\Model\Employmenthistory;
+use App\Http\Resources\EmploymenthistoryResource;
 
 class EmploymenthistoryController extends Controller
 {
@@ -12,9 +14,9 @@ class EmploymenthistoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return EmploymenthistoryResource::collection($user->employmenthistories);
     }
 
     /**

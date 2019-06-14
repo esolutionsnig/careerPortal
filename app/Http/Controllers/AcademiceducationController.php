@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Model\User;
 use Illuminate\Http\Request;
 use App\Model\Academiceducation;
-use App\Http\Resources\Academiceducation\AcademiceducationResource;
+use App\Http\Resources\AcademiceducationResource;
 
 class AcademiceducationController extends Controller
 {

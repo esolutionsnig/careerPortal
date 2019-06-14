@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Professionalqualification;
+use App\Model\User;
 use Illuminate\Http\Request;
+use App\Model\Professionalqualification;
+use App\Http\Resources\ProfessionalqualificationResource;
 
 class ProfessionalqualificationController extends Controller
 {
@@ -12,9 +14,9 @@ class ProfessionalqualificationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return ProfessionalqualificationResource::collection($user->professionalqualifications);
     }
 
     /**

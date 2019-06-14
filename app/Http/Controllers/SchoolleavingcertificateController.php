@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Schoolleavingcertificate;
+use App\Model\User;
 use Illuminate\Http\Request;
+use App\Model\Schoolleavingcertificate;
+use App\Http\Resources\SchoolleavingcertificateResource;
 
 class SchoolleavingcertificateController extends Controller
 {
@@ -12,9 +14,9 @@ class SchoolleavingcertificateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return SchoolleavingcertificateResource::collection($user->schoolleavingcertificates);
     }
 
     /**

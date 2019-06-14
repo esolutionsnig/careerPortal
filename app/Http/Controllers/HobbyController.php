@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\User;
 use App\Model\Hobby;
 use Illuminate\Http\Request;
+use App\Http\Resources\HobbyResource;
 
 class HobbyController extends Controller
 {
@@ -12,9 +14,9 @@ class HobbyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return HobbyResource::collection($user->hobbies);
     }
 
     /**

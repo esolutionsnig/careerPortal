@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Academiceducation;
+namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AcademiceducationResource extends JsonResource
+class SportResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,9 +17,10 @@ class AcademiceducationResource extends JsonResource
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'institution' => $this->institution,
-            'date_of_attendance' => $this->date_of_attendance,
-            'qualification' => $this->qualification
+            'type_of_game' => $this->type_of_game,
+            'club' => $this->club,
+            'date' => $this->date,
+            'status' => $this->status,
         ];
     }
 }

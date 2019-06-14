@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Fullselfdisclosure;
+use App\Model\User;
 use Illuminate\Http\Request;
+use App\Model\Fullselfdisclosure;
+use App\Http\Resources\FullselfdisclosureResource;
 
 class FullselfdisclosureController extends Controller
 {
@@ -12,9 +14,9 @@ class FullselfdisclosureController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return FullselfdisclosureResource::collection($user->fullselfdisclosures);
     }
 
     /**

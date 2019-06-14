@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\User;
 use App\Model\Dependant;
 use Illuminate\Http\Request;
+use App\Http\Resources\DependantResource;
 
 class DependantController extends Controller
 {
@@ -12,9 +14,9 @@ class DependantController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return DependantResource::collection($user->dependants);
     }
 
     /**

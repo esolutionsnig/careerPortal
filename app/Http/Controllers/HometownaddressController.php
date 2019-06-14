@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Hometownaddress;
+use App\Model\User;
 use Illuminate\Http\Request;
+use App\Model\Hometownaddress;
+use App\Http\Resources\HometownaddressResource;
 
 class HometownaddressController extends Controller
 {
@@ -12,9 +14,9 @@ class HometownaddressController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return HometownaddressResource::collection($user->hometownaddresses);
     }
 
     /**

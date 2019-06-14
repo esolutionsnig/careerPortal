@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Professionalmembership;
+use App\Model\User;
 use Illuminate\Http\Request;
+use App\Model\Professionalmembership;
+use App\Http\Resources\ProfessionalmembershipResource;
 
 class ProfessionalmembershipController extends Controller
 {
@@ -12,9 +14,9 @@ class ProfessionalmembershipController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return ProfessionalmembershipResource::collection($user->professionalmemberships);
     }
 
     /**

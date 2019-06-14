@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Nationalservice;
+use App\Model\User;
 use Illuminate\Http\Request;
+use App\Model\Nationalservice;
+use App\Http\Resources\NationalserviceResource;
 
 class NationalserviceController extends Controller
 {
@@ -12,9 +14,9 @@ class NationalserviceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return NationalserviceResource::collection($user->nationalservices);
     }
 
     /**

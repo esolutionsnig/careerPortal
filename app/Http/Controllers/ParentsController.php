@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\User;
 use App\Model\Parents;
 use Illuminate\Http\Request;
+use App\Http\Resources\ParentsResource;
 
 class ParentsController extends Controller
 {
@@ -12,9 +14,9 @@ class ParentsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return ParentsResource::collection($user->parents);
     }
 
     /**

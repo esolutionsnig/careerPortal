@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Applicantdatamanager;
+use App\Model\User;
 use Illuminate\Http\Request;
+use App\Model\Applicantdatamanager;
+use App\Http\Resources\ApplicantdatamanagerResource;
 
 class ApplicantdatamanagerController extends Controller
 {
@@ -12,9 +14,9 @@ class ApplicantdatamanagerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return ApplicantdatamanagerResource::collection($user->applicantdatamanagers);
     }
 
     /**

@@ -47,6 +47,11 @@ class User extends Model
         return $this->hasMany(Declaration::class);
     }
 
+    public function dependants()
+    {
+        return $this->hasMany(Dependant::class);
+    }
+
     public function employmenthistories()
     {
         return $this->hasMany(Employmenthistory::class);
@@ -112,7 +117,7 @@ class User extends Model
         return $this->hasMany(Referee::class);
     }
 
-    public function residentialaddresss()
+    public function residentialaddresses()
     {
         return $this->hasMany(Residentialaddress::class);
     }

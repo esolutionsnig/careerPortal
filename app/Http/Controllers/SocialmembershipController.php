@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Socialmembership;
+use App\Model\User;
 use Illuminate\Http\Request;
+use App\Model\Socialmembership;
+use App\Http\Resources\SocialmembershipResource;
 
 class SocialmembershipController extends Controller
 {
@@ -12,9 +14,9 @@ class SocialmembershipController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return SocialmembershipResource::collection($user->socialmemberships);
     }
 
     /**

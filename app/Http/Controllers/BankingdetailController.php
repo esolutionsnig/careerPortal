@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\User;
 use App\Model\Bankingdetail;
 use Illuminate\Http\Request;
+use App\Http\Resources\BankingdetailResource;
 
 class BankingdetailController extends Controller
 {
@@ -12,9 +14,9 @@ class BankingdetailController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return BankingdetailResource::collection($user->bankingdetails);
     }
 
     /**

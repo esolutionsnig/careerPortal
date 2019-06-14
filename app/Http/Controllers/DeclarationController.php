@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\User;
 use App\Model\Declaration;
 use Illuminate\Http\Request;
+use App\Http\Resources\DeclarationResource;
 
 class DeclarationController extends Controller
 {
@@ -12,9 +14,9 @@ class DeclarationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return DeclarationResource::collection($user->declarations);
     }
 
     /**

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\User;
 use App\Model\Nextofkin;
 use Illuminate\Http\Request;
+use App\Http\Resources\NextofkinResource;
 
 class NextofkinController extends Controller
 {
@@ -12,9 +14,9 @@ class NextofkinController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return NextofkinResource::collection($user->nextofkins);
     }
 
     /**
