@@ -2,6 +2,13 @@
 
 namespace App\Model;
 
+use Laravel\Passport\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
 use App\Model\Hobby;
 use App\Model\Sport;
 use App\Model\General;
@@ -22,11 +29,43 @@ use App\Model\Applicantdatamanager;
 use App\Model\Professionalmembership;
 use App\Model\Employmentselfassessment;
 use App\Model\Schoolleavingcertificate;
-use Illuminate\Database\Eloquent\Model;
 use App\Model\Professionalqualification;
 
-class User extends Model
+// class User extends Model
+
+class User extends Authenticatable
 {
+    use Notifiable, HasApiTokens, SoftDeletes;
+
+    protected $dates = ['deleted_at'];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'surname', 'firstname', 'othernames', 'email', 'password', 'active', 'activation_token'
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token', 'activation_token'
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
     public function academiceducations()
     {
         return $this->hasMany(Academiceducation::class);

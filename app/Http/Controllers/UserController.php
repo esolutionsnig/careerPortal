@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Model\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Notifications\SignupActivate;
 use App\Http\Resources\User\UserResource;
 use App\Http\Resources\User\UserCollection;
 
@@ -20,68 +23,130 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Create user
      *
-     * @return \Illuminate\Http\Response
+     * @param  [string] surname
+     * @param  [string] firstname
+     * @param  [string] othernames
+     * @param  [string] email
+     * @param  [string] password
+     * @param  [string] password_confirmation
+     * @return [string] message
      */
-    public function create()
+    public function signup(Request $request)
     {
-        //
+        $request->validate([
+            'surname' => ['required', 'string', 'max:100'],
+            'firstname' => ['required', 'string', 'max:100'],
+            'othernames' => ['required', 'string', 'max:100'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed']
+        ]);
+
+        $user = new User([
+            'surname' => $request->surname,
+            'firstname' => $request->firstname,
+            'othernames' => $request->othernames,
+            'email' => $request->email,
+            // 'password' => Hash::make($request->password),
+            'password' => bcrypt($request->password),
+            'activation_token' => str_random(60)
+        ]);
+
+        $user->save();
+
+        $user->notify(new SignupActivate($user));
+
+        return response()->json([
+            'message' => 'Successfully created user!'
+        ], 201);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Activate Account
      */
-    public function store(Request $request)
+    public function signupActivate($token)
     {
-        //
+        $user = User::where('activation_token', $token)->first();
+        if (!$user) {
+            return response()->json([
+                'message' => 'This activation token is invalid.'
+            ], 404);
+        }
+
+        $user->active = true;
+        $user->activation_token = '';
+        $user->save();
     }
 
     /**
-     * Display the specified resource.
+     * Login user and create token
      *
-     * @param  \App\Model\User  $user
-     * @return \Illuminate\Http\Response
+     * @param  [string] email
+     * @param  [string] password
+     * @param  [boolean] remember_me
+     * @return [string] access_token
+     * @return [string] token_type
+     * @return [string] expires_at
      */
-    public function show(User $user)
+    public function login(Request $request)
     {
-        return new UserResource($user);
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+            'remember_me' => 'boolean'
+        ]);
+
+        $credentials = request(['email', 'password']);
+        $credentials['active'] = 1;
+        $credentials['deleted_at'] = null;
+
+        if(!Auth::attempt($credentials))
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+
+        $user = $request->user();
+
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->token;
+
+        if ($request->remember_me)
+            $token->expires_at = Carbon::now()->addWeeks(1);
+
+        $token->save();
+
+        return response()->json([
+            'access_token' => $tokenResult->accessToken,
+            'token_type' => 'Bearer',
+            'expires_at' => Carbon::parse(
+                $tokenResult->token->expires_at
+            )->toDateTimeString()
+        ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Logout user (Revoke the token)
      *
-     * @param  \App\Model\User  $user
-     * @return \Illuminate\Http\Response
+     * @return [string] message
      */
-    public function edit(User $user)
+    public function logout(Request $request)
     {
-        //
-    }
+        $request->user()->token()->revoke();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Model\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, User $user)
-    {
-        //
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ]);
     }
-
+  
     /**
-     * Remove the specified resource from storage.
+     * Get the authenticated User
      *
-     * @param  \App\Model\User  $user
-     * @return \Illuminate\Http\Response
+     * @return [json] user object
      */
-    public function destroy(User $user)
+    public function user(Request $request)
     {
-        //
+        return response()->json($request->user());
     }
+    
 }
