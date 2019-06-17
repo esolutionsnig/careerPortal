@@ -5,10 +5,21 @@ namespace App\Http\Controllers;
 use App\Model\User;
 use Illuminate\Http\Request;
 use App\Model\Fullselfdisclosure;
+use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\FullselfdisclosureRequest;
 use App\Http\Resources\FullselfdisclosureResource;
 
 class FullselfdisclosureController extends Controller
 {
+    /**
+     * Add Middleware to prevent unauthenticated users 
+     * from Storing, Updateing of Deleting a record
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except('index','show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -35,9 +46,17 @@ class FullselfdisclosureController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FullselfdisclosureRequest $request, User $user)
     {
-        //
+        $fullselfdisclosure = new Fullselfdisclosure;
+        $fullselfdisclosure->user_id = $request->user_id;
+        $fullselfdisclosure->description = $request->description;
+        $fullselfdisclosure->your_response = $request->your_response;
+        $fullselfdisclosure->additional_details = $request->additional_details;
+        $fullselfdisclosure->save();
+        return response([
+            'data' => new FullselfdisclosureResource($fullselfdisclosure)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -69,9 +88,12 @@ class FullselfdisclosureController extends Controller
      * @param  \App\Model\Fullselfdisclosure  $fullselfdisclosure
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Fullselfdisclosure $fullselfdisclosure)
+    public function update(Request $request,User $user, Fullselfdisclosure $fullselfdisclosure)
     {
-        //
+        $fullselfdisclosure->update($request->all());
+        return response([
+            'data' => new FullselfdisclosureResource($fullselfdisclosure)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -80,8 +102,9 @@ class FullselfdisclosureController extends Controller
      * @param  \App\Model\Fullselfdisclosure  $fullselfdisclosure
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Fullselfdisclosure $fullselfdisclosure)
+    public function destroy(User $user, Fullselfdisclosure $fullselfdisclosure)
     {
-        //
+        $fullselfdisclosure->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

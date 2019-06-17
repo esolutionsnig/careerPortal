@@ -24,6 +24,16 @@ Route::group(['prefix' => 'auth'], function () {
     });
 });
 
+Route::group([    
+    'namespace' => 'Auth',    
+    'middleware' => 'api',    
+    'prefix' => 'password'
+], function () {    
+    Route::post('create', 'PasswordResetController@create');
+    Route::get('find/{token}', 'PasswordResetController@find');
+    Route::post('reset', 'PasswordResetController@reset');
+});
+
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
@@ -58,7 +68,7 @@ Route::group(['prefix' => 'users'], function () {
 
     Route::apiResource('/{user}/nextofkins','NextofkinController');
 
-    Route::apiResource('/{user}/parents','ParentsController');
+    Route::apiResource('/{user}/prents','PrentController');
 
     Route::apiResource('/{user}/professionalmemberships','ProfessionalmembershipController');
 

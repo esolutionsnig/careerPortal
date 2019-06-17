@@ -10,6 +10,9 @@ use App\Notifications\SignupActivate;
 use App\Http\Resources\User\UserResource;
 use App\Http\Resources\User\UserCollection;
 
+use Avatar;
+use Storage;
+
 class UserController extends Controller
 {
     /**
@@ -54,6 +57,9 @@ class UserController extends Controller
         ]);
 
         $user->save();
+
+        $avatar = Avatar::create($user->firstname)->getImageObject()->encode('png');
+        Storage::put('avatars/'.$user->id.'/avatar.png', (string) $avatar);
 
         $user->notify(new SignupActivate($user));
 

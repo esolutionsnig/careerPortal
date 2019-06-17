@@ -5,10 +5,21 @@ namespace App\Http\Controllers;
 use App\Model\User;
 use App\Model\Bankingdetail;
 use Illuminate\Http\Request;
+use App\Http\Requests\BankingdetailRequest;
 use App\Http\Resources\BankingdetailResource;
+use Symfony\Component\HttpFoundation\Response;
 
 class BankingdetailController extends Controller
 {
+    /**
+     * Add Middleware to prevent unauthenticated users 
+     * from Storing, Updateing of Deleting a record
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except('index','show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -34,10 +45,19 @@ class BankingdetailController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+     */			
+    public function store(BankingdetailRequest $request, User $user)
     {
-        //
+        $bankingdetail = new Bankingdetail;
+        $bankingdetail->user_id = $request->user_id;
+        $bankingdetail->bank_name = $request->bank_name;
+        $bankingdetail->account_number = $request->account_number;
+        $bankingdetail->account_status = $request->account_status;
+        $bankingdetail->bvn_number = $request->bvn_number;
+        $bankingdetail->save();
+        return response([
+            'data' => new BankingdetailResource($bankingdetail)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -69,9 +89,12 @@ class BankingdetailController extends Controller
      * @param  \App\Model\Bankingdetail  $bankingdetail
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Bankingdetail $bankingdetail)
+    public function update(Request $request, User $user, Bankingdetail $bankingdetail)
     {
-        //
+        $bankingdetail->update($request->all());
+        return response([
+            'data' => new BankingdetailResource($bankingdetail)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -80,8 +103,9 @@ class BankingdetailController extends Controller
      * @param  \App\Model\Bankingdetail  $bankingdetail
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Bankingdetail $bankingdetail)
+    public function destroy(User $user, Bankingdetail $bankingdetail)
     {
-        //
+        $bankingdetail->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

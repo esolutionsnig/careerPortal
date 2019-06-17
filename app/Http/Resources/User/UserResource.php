@@ -34,7 +34,7 @@ class UserResource extends JsonResource
                 'hometownaddresses' => route('hometownaddresses.index', $this->id),
                 'nationalservices' => route('nationalservices.index', $this->id),
                 'nextofkins' => route('nextofkins.index', $this->id),
-                'parents' => route('parents.index', $this->id),
+                'prents' => route('prents.index', $this->id),
                 'professionalmemberships' => route('professionalmemberships.index', $this->id),
                 'professionalqualifications' => route('professionalqualifications.index', $this->id),
                 'referees' => route('referees.index', $this->id),

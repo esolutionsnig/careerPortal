@@ -5,10 +5,21 @@ namespace App\Http\Controllers;
 use App\Model\User;
 use Illuminate\Http\Request;
 use App\Model\Academiceducation;
+use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\AcademiceducationRequest;
 use App\Http\Resources\AcademiceducationResource;
 
 class AcademiceducationController extends Controller
 {
+    /**
+     * Add Middleware to prevent unauthenticated users 
+     * from Storing, Updateing of Deleting a record
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except('index','show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -35,9 +46,17 @@ class AcademiceducationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AcademiceducationRequest $request, User $user)
     {
-        //
+        $academiceducation = new Academiceducation;
+        $academiceducation->user_id = $request->user_id;
+        $academiceducation->institution = $request->institution;
+        $academiceducation->date_of_attendance = $request->date_of_attendance;
+        $academiceducation->qualification = $request->qualification;
+        $academiceducation->save();
+        return response([
+            'data' => new AcademiceducationResource($academiceducation)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -69,9 +88,12 @@ class AcademiceducationController extends Controller
      * @param  \App\Model\Academiceducation  $academiceducation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Academiceducation $academiceducation)
+    public function update(Request $request, User $user, Academiceducation $academiceducation)
     {
-        //
+        $academiceducation->update($request->all());
+        return response([
+            'data' => new AcademiceducationResource($academiceducation)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -80,8 +102,9 @@ class AcademiceducationController extends Controller
      * @param  \App\Model\Academiceducation  $academiceducation
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Academiceducation $academiceducation)
+    public function destroy(User $user, Academiceducation $academiceducation)
     {
-        //
+        $academiceducation->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

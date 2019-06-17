@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Professionalqualification extends Model
 {
+    protected $fillable = [
+        'user_id','institution','date_of_attendance','qualification'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

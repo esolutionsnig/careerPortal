@@ -2,17 +2,13 @@
 
 namespace App\Model;
 
-use Laravel\Passport\HasApiTokens;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-
+use Storage;
 use App\Model\Hobby;
+use App\Model\Prent;
 use App\Model\Sport;
 use App\Model\General;
 use App\Model\Parents;
+
 use App\Model\Referee;
 use App\Model\Guardian;
 use App\Model\Nextofkin;
@@ -25,11 +21,18 @@ use App\Model\Academiceducation;
 use App\Model\Employmenthistory;
 use App\Model\Fullselfdisclosure;
 use App\Model\Residentialaddress;
+use Laravel\Passport\HasApiTokens;
 use App\Model\Applicantdatamanager;
 use App\Model\Professionalmembership;
 use App\Model\Employmentselfassessment;
 use App\Model\Schoolleavingcertificate;
+use Illuminate\Database\Eloquent\Model;
 use App\Model\Professionalqualification;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 // class User extends Model
 
@@ -45,7 +48,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'surname', 'firstname', 'othernames', 'email', 'password', 'active', 'activation_token'
+        'surname', 'firstname', 'othernames', 'email', 'password', 'active', 'activation_token', 'avatar'
     ];
 
     /**
@@ -65,6 +68,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $appends = ['avatar_url'];
+    public function getAvatarUrlAttribute()
+    {
+        return Storage::url('avatars/'.$this->id.'/'.$this->avatar);
+    }
 
     public function academiceducations()
     {
@@ -136,9 +145,9 @@ class User extends Authenticatable
         return $this->hasMany(Nextofkin::class);
     }
 
-    public function parents()
+    public function prents()
     {
-        return $this->hasMany(Parents::class);
+        return $this->hasMany(Prent::class);
     }
 
     public function professionalmemberships()

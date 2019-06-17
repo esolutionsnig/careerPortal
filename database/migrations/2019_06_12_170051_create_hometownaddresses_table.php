@@ -18,7 +18,7 @@ class CreateHometownaddressesTable extends Migration
             $table->integer('user_id')->unsigned()->index();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('landmarks')->nullable();
-            $table->string('residedntial_area')->nullable();
+            $table->string('residential_area')->nullable();
             $table->string('house_number')->nullable();
             $table->string('street_name')->nullable();
             $table->string('suburb')->nullable();

@@ -5,10 +5,21 @@ namespace App\Http\Controllers;
 use App\Model\User;
 use App\Model\Sport;
 use Illuminate\Http\Request;
+use App\Http\Requests\SportRequest;
 use App\Http\Resources\SportResource;
+use Symfony\Component\HttpFoundation\Response;
 
 class SportController extends Controller
 {
+    /**
+     * Add Middleware to prevent unauthenticated users 
+     * from Storing, Updateing of Deleting a record
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except('index','show');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -35,9 +46,18 @@ class SportController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SportRequest $request, User $user)
     {
-        //
+        $sport = new Sport;
+        $sport->user_id = $request->user_id;
+        $sport->type_of_game = $request->type_of_game;
+        $sport->club = $request->club;
+        $sport->date = $request->date;
+        $sport->status = $request->status;
+        $sport->save();
+        return response([
+            'data' => new SportResource($sport)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -69,9 +89,12 @@ class SportController extends Controller
      * @param  \App\Model\Sport  $sport
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Sport $sport)
+    public function update(Request $request, User $user, Sport $sport)
     {
-        //
+        $sport->update($request->all());
+        return response([
+            'data' => new SportResource($sport)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -80,8 +103,9 @@ class SportController extends Controller
      * @param  \App\Model\Sport  $sport
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Sport $sport)
+    public function destroy(User $user, Sport $sport)
     {
-        //
+        $sport->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

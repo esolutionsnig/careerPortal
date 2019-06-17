@@ -5,10 +5,21 @@ namespace App\Http\Controllers;
 use App\Model\User;
 use Illuminate\Http\Request;
 use App\Model\Hometownaddress;
+use App\Http\Requests\HometownaddressRequest;
+use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\HometownaddressResource;
 
 class HometownaddressController extends Controller
 {
+    /**
+     * Add Middleware to prevent unauthenticated users 
+     * from Storing, Updateing of Deleting a record
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except('index','show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -35,9 +46,22 @@ class HometownaddressController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(HometownaddressRequest $request, User $user)
     {
-        //
+        $hometownaddress = new Hometownaddress;
+        $hometownaddress->user_id = $request->user_id;
+        $hometownaddress->landmarks = $request->landmarks;
+        $hometownaddress->residential_area = $request->residential_area;
+        $hometownaddress->house_number = $request->house_number;
+        $hometownaddress->street_name = $request->street_name;
+        $hometownaddress->suburb = $request->suburb;
+        $hometownaddress->town = $request->town;
+        $hometownaddress->district = $request->district;
+        $hometownaddress->home_phone = $request->home_phone;
+        $hometownaddress->save();
+        return response([
+            'data' => new HometownaddressResource($hometownaddress)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -69,9 +93,12 @@ class HometownaddressController extends Controller
      * @param  \App\Model\Hometownaddress  $hometownaddress
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Hometownaddress $hometownaddress)
+    public function update(Request $request,User $user, Hometownaddress $hometownaddress)
     {
-        //
+        $hometownaddress->update($request->all());
+        return response([
+            'data' => new HometownaddressResource($hometownaddress)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -80,8 +107,9 @@ class HometownaddressController extends Controller
      * @param  \App\Model\Hometownaddress  $hometownaddress
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Hometownaddress $hometownaddress)
+    public function destroy(User $user,Hometownaddress $hometownaddress)
     {
-        //
+        $hometownaddress->delete();
+        return response(null, Response::HTTP_CREATED);
     }
 }

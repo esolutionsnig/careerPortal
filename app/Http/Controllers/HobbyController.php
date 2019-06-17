@@ -5,10 +5,21 @@ namespace App\Http\Controllers;
 use App\Model\User;
 use App\Model\Hobby;
 use Illuminate\Http\Request;
+use App\Http\Requests\HobbyRequest;
 use App\Http\Resources\HobbyResource;
+use Symfony\Component\HttpFoundation\Response;
 
 class HobbyController extends Controller
 {
+    /**
+     * Add Middleware to prevent unauthenticated users 
+     * from Storing, Updateing of Deleting a record
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except('index','show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -35,9 +46,15 @@ class HobbyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(HobbyRequest $request, User $user)
     {
-        //
+        $hobby = new Hobby;
+        $hobby->user_id = $request->user_id;
+        $hobby->title = $request->title;
+        $hobby->save();
+        return response([
+            'data' => new HobbyResource($hobby)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -69,9 +86,12 @@ class HobbyController extends Controller
      * @param  \App\Model\Hobby  $hobby
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Hobby $hobby)
+    public function update(Request $request, User $user, Hobby $hobby)
     {
-        //
+        $hobby->update($request->all());
+        return response([
+            'data' => new HobbyResource($hobby)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -80,8 +100,9 @@ class HobbyController extends Controller
      * @param  \App\Model\Hobby  $hobby
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Hobby $hobby)
+    public function destroy(User $user, Hobby $hobby)
     {
-        //
+        $hobby->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

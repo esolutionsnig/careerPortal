@@ -5,10 +5,21 @@ namespace App\Http\Controllers;
 use App\Model\User;
 use Illuminate\Http\Request;
 use App\Model\Professionalqualification;
+use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\ProfessionalqualificationRequest;
 use App\Http\Resources\ProfessionalqualificationResource;
 
 class ProfessionalqualificationController extends Controller
 {
+    /**
+     * Add Middleware to prevent unauthenticated users 
+     * from Storing, Updateing of Deleting a record
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except('index','show');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -35,9 +46,17 @@ class ProfessionalqualificationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProfessionalqualificationRequest $request, User $user)
     {
-        //
+        $professionalqualification = new Professionalqualification;
+        $professionalqualification->user_id = $request->user_id;
+        $professionalqualification->institution = $request->institution;
+        $professionalqualification->date_of_attendance = $request->date_of_attendance;
+        $professionalqualification->qualification = $request->qualification;
+        $professionalqualification->save();
+        return response([
+            'data' => new ProfessionalqualificationResource($professionalqualification)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -69,9 +88,12 @@ class ProfessionalqualificationController extends Controller
      * @param  \App\Model\Professionalqualification  $professionalqualification
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Professionalqualification $professionalqualification)
+    public function update(Request $request, User $user, Professionalqualification $professionalqualification)
     {
-        //
+        $professionalqualification->update($request->all());
+        return response([
+            'data' => new ProfessionalqualificationResource($professionalqualification)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -80,8 +102,9 @@ class ProfessionalqualificationController extends Controller
      * @param  \App\Model\Professionalqualification  $professionalqualification
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Professionalqualification $professionalqualification)
+    public function destroy(User $user, Professionalqualification $professionalqualification)
     {
-        //
+        $professionalqualification->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

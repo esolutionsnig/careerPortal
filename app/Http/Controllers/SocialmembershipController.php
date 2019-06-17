@@ -5,10 +5,21 @@ namespace App\Http\Controllers;
 use App\Model\User;
 use Illuminate\Http\Request;
 use App\Model\Socialmembership;
+use App\Http\Requests\SocialmembershipRequest;
+use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\SocialmembershipResource;
 
 class SocialmembershipController extends Controller
 {
+    /**
+     * Add Middleware to prevent unauthenticated users 
+     * from Storing, Updateing of Deleting a record
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except('index','show');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -35,9 +46,18 @@ class SocialmembershipController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SocialmembershipRequest $request, User $user)
     {
-        //
+        $socialmembership = new Socialmembership;
+        $socialmembership->user_id = $request->user_id;
+        $socialmembership->name = $request->name;
+        $socialmembership->date = $request->date;
+        $socialmembership->position = $request->position;
+        $socialmembership->status = $request->status;
+        $socialmembership->save();
+        return response([
+            'data' => new SocialmembershipResource($socialmembership)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -69,9 +89,12 @@ class SocialmembershipController extends Controller
      * @param  \App\Model\Socialmembership  $socialmembership
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Socialmembership $socialmembership)
+    public function update(Request $request,User $user,  Socialmembership $socialmembership)
     {
-        //
+        $socialmembership->update($request->all());
+        return response([
+            'data' => new SocialmembershipResource($socialmembership)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -80,8 +103,9 @@ class SocialmembershipController extends Controller
      * @param  \App\Model\Socialmembership  $socialmembership
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Socialmembership $socialmembership)
+    public function destroy(User $user, Socialmembership $socialmembership)
     {
-        //
+        $socialmembership->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

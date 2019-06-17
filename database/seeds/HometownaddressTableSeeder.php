@@ -14,7 +14,7 @@ class HometownaddressTableSeeder extends Seeder
         DB::table('hometownaddresses')->insert([
             'user_id' => 1,
             'landmarks' => 'Eke Ukwu Market',
-            'residedntial_area' => 'Amala',
+            'residential_area' => 'Amala',
             'street_name' => 'Nwankwala',
             'suburb' => 'Umuewo',
             'town' => 'Amala',
