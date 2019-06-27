@@ -20,6 +20,7 @@ Route::group(['prefix' => 'auth'], function () {
     // Route::patch('users/{user}/update', ['as' => 'users.update', 'uses' => 'UserController@update']);
 
     Route::group(['middleware' => 'auth:api'], function () {
+        Route::patch('users/{user}/updatePassword', 'UserController@updatePassword');
         Route::patch('users/{user}/update', 'UserController@update');
         Route::patch('users/{user}/avatar', 'UserController@updateAvatar');
         Route::get('logout', 'UserController@logout');

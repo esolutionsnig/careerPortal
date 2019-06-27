@@ -150,7 +150,35 @@ class UserController extends Controller
     }
 
     /**
+     * Update User Password
+     *
+     * @param  [string] password
+     * @param  [string] password_confirmation
+     * @return [string] message
+     */
+    public function updatePassword(User $user)
+    {
+
+        $this->validate(request(), [
+            'password' => ['required', 'string', 'min:8', 'confirmed']
+        ]);
+
+        $user->password = bcrypt(request('password'));
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Successfully updated your password!'
+        ], 201);
+    }
+
+    /**
      * Update User Profile
+     *
+     * @param  [string] surname
+     * @param  [string] firstname
+     * @param  [string] othernames
+     * @return [string] message
      */
     public function update(User $user)
     {
@@ -173,6 +201,9 @@ class UserController extends Controller
 
     /**
      * Update User Profile Avatar
+     *
+     * @param  [string] avatar
+     * @return [string] message
      */
     public function updateAvatar(User $user)
     {
