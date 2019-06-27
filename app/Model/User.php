@@ -72,7 +72,8 @@ class User extends Authenticatable
     protected $appends = ['avatar_url'];
     public function getAvatarUrlAttribute()
     {
-        return Storage::url('avatars/'.$this->id.'/'.$this->avatar);
+        // return Storage::url('avatars/'.$this->id.'/'.$this->avatar);
+        return $this->avatar;
     }
 
     public function academiceducations()

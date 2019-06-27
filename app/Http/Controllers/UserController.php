@@ -83,6 +83,9 @@ class UserController extends Controller
         $user->active = true;
         $user->activation_token = '';
         $user->save();
+        return response()->json([
+            'message' => 'Activation successful'
+        ], 201);
     }
 
     /**
@@ -127,7 +130,8 @@ class UserController extends Controller
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse(
                 $tokenResult->token->expires_at
-            )->toDateTimeString()
+            )->toDateTimeString(),
+            'user' => $user
         ]);
     }
 
@@ -144,7 +148,47 @@ class UserController extends Controller
             'message' => 'Successfully logged out'
         ]);
     }
-  
+
+    /**
+     * Update User Profile
+     */
+    public function update(User $user)
+    {
+        $this->validate(request(), [
+            'surname' => 'required',
+            'firstname' => 'required',
+            'othernames' => 'required'
+        ]);
+
+        $user->surname = request('surname');
+        $user->firstname = request('firstname');
+        $user->othernames = request('othernames');
+
+        $user->save();
+
+        return response()->json([
+            'user' => $user
+        ], 201);
+    }
+
+    /**
+     * Update User Profile Avatar
+     */
+    public function updateAvatar(User $user)
+    {
+        $this->validate(request(), [
+            'avatar' => 'required'
+        ]);
+
+        $user->avatar = request('avatar');
+
+        $user->save();
+
+        return response()->json([
+            'user' => $user
+        ], 201);
+    }
+
     /**
      * Get the authenticated User
      *
@@ -154,5 +198,5 @@ class UserController extends Controller
     {
         return response()->json($request->user());
     }
-    
+
 }
